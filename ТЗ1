@@ -4,5 +4,6 @@
 
 cd
 find $1 -type f -exec cp {} $2 \;
-find output_dir
+cd $2
+ls
 
