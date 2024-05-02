@@ -1,0 +1,32 @@
+#!/bin/bash
+# Проверяем, что передано два параметра
+if [ $# -ne 2 ]; then
+  exit 1
+fi
+# Получаем список файлов и директорий во входной директории
+input_dir=\$1
+output_dir=\$2
+files=$(find "$input_dir" -type f)
+dirs=$(find "$input_dir" -type d)
+# Копируем файлы из входной директории в выходную
+for file in $files; do
+  cp "$file" "$output_dir"
+done
+# Рекурсивно обходим вложенные директории и копируем файлы
+for dir in $dirs; do
+  # Получаем список файлов во вложенной директории
+  nested_files=$(find "$dir" -type f)
+  # Копируем файлы из вложенной директории в выходную
+  for nested_file in $nested_files; do
+    cp "$nested_file" "$output_dir"
+  done
+done
+# Добавляем суффикс к именам файлов в выходной директории
+i=1
+for file in "$output_dir"/*; do
+  if [ -f "$file" ]; then
+    new_file="$file-$i"
+    mv "$file" "$new_file"
+    ((i++))
+  fi
+done
